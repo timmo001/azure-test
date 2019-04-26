@@ -11,15 +11,15 @@ trigger:
 pr:
   - master
 
-variables:
-  VERSION_HADOLINT: "latest"
-  VERSION_SHELLCHECK: "latest"
+# variables:
+#   VERSION_HADOLINT: "latest"
+#   VERSION_SHELLCHECK: "latest"
 
 jobs:
   - job: "hadolint"
     pool:
       vmImage: "ubuntu-16.04"
-    container: pipelinecomponents/hadolint:${VERSION_HADOLINT}
+    container: pipelinecomponents/hadolint:latest
     steps:
       - script: |
           hadolint --version
@@ -29,7 +29,7 @@ jobs:
   - job: "shellcheck"
     pool:
       vmImage: "ubuntu-16.04"
-    container: pipelinecomponents/shellcheck:${VERSION_SHELLCHECK}
+    container: pipelinecomponents/shellcheck:latest
     steps:
       - script: |
           shellcheck --version

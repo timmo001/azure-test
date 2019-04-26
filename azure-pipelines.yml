@@ -15,16 +15,6 @@ pool:
   vmImage: "ubuntu-16.04"
 
 variables:
-  # PREFLIGHT_HADOLINT: "true"
-  # PREFLIGHT_JSONLINT: "true"
-  # PREFLIGHT_MARKDOWNLINT: "true"
-  # PREFLIGHT_SHELLCHECK: "true"
-  # PREFLIGHT_YAMLLINT: "true"
-  # PREFLIGHT_ESLINT: "true"
-  # PREFLIGHT_STYLELINT: "true"
-  # TEST: "false"
-  # DEPLOY_DOCKER: "true"
-  # PAGES_MKDOCS: "false"
   VERSION_HADOLINT: "latest"
   VERSION_SHELLCHECK: "latest"
 

@@ -4,16 +4,42 @@
 # https://aka.ms/yaml
 
 trigger:
+  branches:
+    include:
+      - master
+  tags:
+    include:
+      - "*"
+    exclude:
+      - untagged*
+pr:
   - master
 
-pool:
-  vmImage: "Ubuntu-16.04"
+variables:
+  versionHadolint: "v1.16.3"
+  versionShellCheck: "v0.6.0"
+  versionBuilder: "1.1"
 
-steps:
-  - script: echo Hello, world!
-    displayName: "Run a one-line script"
+jobs:
+  - job: "Hadolint"
+    pool:
+      vmImage: "ubuntu-16.04"
+    steps:
+      - script: sudo docker pull hadolint/hadolint:$(versionHadolint)
+        displayName: "Install Hadolint"
+      - script: |
+          sudo docker run --rm -i \
+            -v $(pwd)/.hadolint.yaml:/.hadolint.yaml:ro \
+            hadolint/hadolint:$(versionHadolint) < Dockerfile
+        displayName: "Run Hadolint"
 
-  - script: |
-      echo Add other tasks to build, test, and deploy your project.
-      echo See https://aka.ms/yaml
-    displayName: "Run a multi-line script"
+  - job: "ShellCheck"
+    pool:
+      vmImage: "ubuntu-16.04"
+    steps:
+      - script: sudo docker pull koalaman/shellcheck:$(versionShellCheck)
+        displayName: "Install ShellCheck"
+      - script: |
+          sudo docker run --rm -i \
+            -v $(pwd):/mnt:ro koalaman/shellcheck:$(versionShellCheck) *.sh
+        displayName: "Run ShellCheck"

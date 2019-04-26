@@ -11,15 +11,14 @@ trigger:
 pr:
   - master
 
-pool:
-  vmImage: "ubuntu-16.04"
-
 variables:
   VERSION_HADOLINT: "latest"
   VERSION_SHELLCHECK: "latest"
 
 jobs:
   - job: "hadolint"
+    pool:
+      vmImage: "ubuntu-16.04"
     container: pipelinecomponents/hadolint:${VERSION_HADOLINT}
     steps:
       - script: |
@@ -28,6 +27,8 @@ jobs:
         displayName: "Run hadolint"
 
   - job: "shellcheck"
+    pool:
+      vmImage: "ubuntu-16.04"
     container: pipelinecomponents/shellcheck:${VERSION_SHELLCHECK}
     steps:
       - script: |

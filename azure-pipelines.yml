@@ -15,9 +15,11 @@ variables:
   ENABLE_HADOLINT: "false"
   ENABLE_MARKDOWNLINT: "true"
   ENABLE_SHELLCHECK: "false"
+  ENABLE_YAMLLINT: "true"
   VERSION_HADOLINT: "latest"
   VERSION_MARKDOWNLINT: "latest"
   VERSION_SHELLCHECK: "latest"
+  VERSION_YAMLLINT: "latest"
 
 jobs:
   # hadolint
@@ -66,3 +68,18 @@ jobs:
             echo "shellcheck disabled. Skipping.."
           fi
         displayName: "Run shellcheck"
+  # yamllint
+  - job: "yamllint"
+    pool:
+      vmImage: "ubuntu-16.04"
+    steps:
+      - script: sudo docker pull sdesbure/yamllint:${VERSION_YAMLLINT}
+        displayName: "Install yamllint"
+      - script: |
+          if [ ${ENABLE_YAMLLINT} = "true" ]; then
+            sudo docker run --rm -i \
+              -v $(pwd):/yaml:ro sdesbure/yamllint:${VERSION_YAMLLINT} .
+          else
+            echo "yamllint disabled. Skipping.."
+          fi
+        displayName: "Run yamllint"

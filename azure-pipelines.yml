@@ -16,6 +16,15 @@ pr:
 #   VERSION_SHELLCHECK: "latest"
 
 jobs:
+  - job: "docker"
+    pool:
+      vmImage: "ubuntu-16.04"
+    container: ubuntu:latest
+    steps:
+      - script: |
+          lsb_release -a
+        displayName: "Docker test"
+
   - job: "hadolint"
     pool:
       vmImage: "ubuntu-16.04"

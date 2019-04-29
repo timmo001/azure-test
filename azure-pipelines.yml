@@ -12,11 +12,11 @@ pr:
   - master
 
 variables:
-  ENABLE_ESLINT: "true"
-  ENABLE_HADOLINT: "false"
-  ENABLE_MARKDOWNLINT: "true"
-  ENABLE_SHELLCHECK: "false"
-  ENABLE_YAMLLINT: "true"
+  ENABLE_PREFLIGHT_ESLINT: "true"
+  ENABLE_PREFLIGHT_HADOLINT: "false"
+  ENABLE_PREFLIGHT_MARKDOWNLINT: "true"
+  ENABLE_PREFLIGHT_SHELLCHECK: "false"
+  ENABLE_PREFLIGHT_YAMLLINT: "true"
   VERSION_ESLINT: "latest"
   VERSION_HADOLINT: "latest"
   VERSION_MARKDOWNLINT: "latest"
@@ -32,7 +32,7 @@ jobs:
       - script: sudo docker pull sherpany/eslint:${VERSION_ESLINT}
         displayName: "Install eslint"
       - script: |
-          if [ ${ENABLE_ESLINT} = "true" ]; then
+          if [ ${ENABLE_PREFLIGHT_ESLINT} = "true" ]; then
             sudo docker run --rm -i \
               -v $(pwd):/app/js:ro sherpany/eslint:${VERSION_ESLINT} .
           else
@@ -47,7 +47,7 @@ jobs:
       - script: sudo docker pull hadolint/hadolint:${VERSION_HADOLINT}
         displayName: "Install hadolint"
       - script: |
-          if [ ${ENABLE_HADOLINT} = "true" ]; then
+          if [ ${ENABLE_PREFLIGHT_HADOLINT} = "true" ]; then
             sudo docker run --rm -i \
               -v $(pwd)/.hadolint.yaml:/.hadolint.yaml:ro \
               hadolint/hadolint:${VERSION_HADOLINT} < Dockerfile
@@ -63,7 +63,7 @@ jobs:
       - script: sudo docker pull mivok/markdownlint:${VERSION_MARKDOWNLINT}
         displayName: "Install markdownlint"
       - script: |
-          if [ ${ENABLE_MARKDOWNLINT} = "true" ]; then
+          if [ ${ENABLE_PREFLIGHT_MARKDOWNLINT} = "true" ]; then
             sudo docker run --rm -i \
               -v $(pwd):/data:ro mivok/markdownlint:${VERSION_MARKDOWNLINT} .
           else
@@ -78,7 +78,7 @@ jobs:
       - script: sudo docker pull koalaman/shellcheck:${VERSION_SHELLCHECK}
         displayName: "Install shellcheck"
       - script: |
-          if [ ${ENABLE_SHELLCHECK} = "true" ]; then
+          if [ ${ENABLE_PREFLIGHT_SHELLCHECK} = "true" ]; then
             sudo docker run --rm -i \
               -v $(pwd):/mnt:ro koalaman/shellcheck:${VERSION_SHELLCHECK} *.sh
           else
@@ -93,7 +93,7 @@ jobs:
       - script: sudo docker pull sdesbure/yamllint:${VERSION_YAMLLINT}
         displayName: "Install yamllint"
       - script: |
-          if [ ${ENABLE_YAMLLINT} = "true" ]; then
+          if [ ${ENABLE_PREFLIGHT_YAMLLINT} = "true" ]; then
             sudo docker run --rm -i \
               -v $(pwd):/yaml:ro \
               sdesbure/yamllint:${VERSION_YAMLLINT} yamllint .

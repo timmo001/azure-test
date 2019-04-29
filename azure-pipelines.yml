@@ -12,16 +12,33 @@ pr:
   - master
 
 variables:
+  ENABLE_ESLINT: "false"
   ENABLE_HADOLINT: "false"
   ENABLE_MARKDOWNLINT: "true"
   ENABLE_SHELLCHECK: "false"
   ENABLE_YAMLLINT: "true"
+  VERSION_ESLINT: "latest"
   VERSION_HADOLINT: "latest"
   VERSION_MARKDOWNLINT: "latest"
   VERSION_SHELLCHECK: "latest"
   VERSION_YAMLLINT: "latest"
 
 jobs:
+  # eslint
+  - job: "eslint"
+    pool:
+      vmImage: "ubuntu-16.04"
+    steps:
+      - script: sudo docker pull sherpany/eslint:${VERSION_ESLINT}
+        displayName: "Install eslint"
+      - script: |
+          if [ ${ENABLE_ESLINT} = "true" ]; then
+            sudo docker run --rm -i \
+              -v $(pwd):/app/js:ro sherpany/eslint:${VERSION_ESLINT} .
+          else
+            echo "eslint disabled. Skipping.."
+          fi
+        displayName: "Run eslint"
   # hadolint
   - job: "hadolint"
     pool:

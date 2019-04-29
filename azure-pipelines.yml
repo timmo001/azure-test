@@ -12,7 +12,7 @@ pr:
   - master
 
 variables:
-  ENABLE_ESLINT: "false"
+  ENABLE_ESLINT: "true"
   ENABLE_HADOLINT: "false"
   ENABLE_MARKDOWNLINT: "true"
   ENABLE_SHELLCHECK: "false"

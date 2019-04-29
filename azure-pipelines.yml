@@ -95,7 +95,7 @@ jobs:
       - script: |
           if [ ${ENABLE_YAMLLINT} = "true" ]; then
             sudo docker run --rm -i \
-              -v $(pwd):/yaml:ro sdesbure/yamllint:${VERSION_YAMLLINT} .
+              -v $(pwd):/yaml:ro sdesbure/yamllint:${VERSION_YAMLLINT} yamllint .
           else
             echo "yamllint disabled. Skipping.."
           fi

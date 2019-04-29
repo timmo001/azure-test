@@ -24,8 +24,8 @@ variables:
   VERSION_YAMLLINT: "latest"
 
 jobs:
-  # Preflight: eslint
-  - job: "Preflight: eslint"
+  # Preflight_eslint
+  - job: "Preflight_eslint"
     pool:
       vmImage: "ubuntu-16.04"
     steps:
@@ -39,8 +39,8 @@ jobs:
             echo "eslint disabled. Skipping.."
           fi
         displayName: "Run eslint"
-  # Preflight: hadolint
-  - job: "Preflight: hadolint"
+  # Preflight_hadolint
+  - job: "Preflight_hadolint"
     pool:
       vmImage: "ubuntu-16.04"
     steps:
@@ -55,8 +55,8 @@ jobs:
             echo "hadolint disabled. Skipping.."
           fi
         displayName: "Run hadolint"
-  # Preflight: markdownlint
-  - job: "Preflight: markdownlint"
+  # Preflight_markdownlint
+  - job: "Preflight_markdownlint"
     pool:
       vmImage: "ubuntu-16.04"
     steps:
@@ -70,8 +70,8 @@ jobs:
             echo "markdownlint disabled. Skipping.."
           fi
         displayName: "Run markdownlint"
-  # Preflight: shellcheck
-  - job: "Preflight: shellcheck"
+  # Preflight_shellcheck
+  - job: "Preflight_shellcheck"
     pool:
       vmImage: "ubuntu-16.04"
     steps:
@@ -85,8 +85,8 @@ jobs:
             echo "shellcheck disabled. Skipping.."
           fi
         displayName: "Run shellcheck"
-  # Preflight: yamllint
-  - job: "Preflight: yamllint"
+  # Preflight_yamllint
+  - job: "Preflight_yamllint"
     pool:
       vmImage: "ubuntu-16.04"
     steps:

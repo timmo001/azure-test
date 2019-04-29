@@ -24,7 +24,7 @@ jobs:
       vmImage: "ubuntu-16.04"
     steps:
       - script: sudo docker pull hadolint/hadolint:${VERSION_HADOLINT}
-        displayName: "Install Hadolint"
+        displayName: "Install hadolint"
       - script: |
           if [ ${ENABLE_HADOLINT} = "true" ]; then
             sudo docker run --rm -i \
@@ -33,7 +33,7 @@ jobs:
           fi
         displayName: "Run hadolint"
   # shellcheck
-  - job: "shellCheck"
+  - job: "shellcheck"
     pool:
       vmImage: "ubuntu-16.04"
     steps:

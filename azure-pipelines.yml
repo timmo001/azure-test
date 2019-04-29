@@ -19,49 +19,41 @@ jobs:
   - job: "hadolint"
     pool:
       vmImage: "ubuntu-16.04"
-    container: timmo001/alpine-bash:latest
+    container: hadolint/hadolint:latest
     steps:
       - script: |
-          # Install
-          apk --no-cache add curl=7.64.0-r1 cabal=2.2.0.0-r0 ghc=8.4.3-r0 build-base=0.5-r1 upx=3.95-r1
-          mkdir -p /app/hadolint
-          cd /app/hadolint
-          cabal update
-          cabal new-install --jobs  --enable-executable-stripping --enable-optimization=2 --enable-shared --enable-split-sections  --disable-debug-info --constraint="hadolint == 1.16.3" "hadolint"
-          if [ -h /root/.cabal/bin/hadolint ] ; then cp --remove-destination "$(readlink -f /root/.cabal/bin/hadolint )" /root/.cabal/bin/hadolint ; fi
-          upx -9 /root/.cabal/bin/hadolint
           # Main script
           hadolint --version
           hadolint "${TARGET}/Dockerfile"
         displayName: "Run hadolint"
 
-  - job: "shellcheck"
-    pool:
-      vmImage: "ubuntu-16.04"
-    container: timmo001/alpine-bash:latest
-    steps:
-      - script: |
-          # Install
-          apk --no-cache add curl=7.64.0-r1 cabal=2.2.0.0-r0 ghc=8.4.3-r0 build-base=0.5-r1 upx=3.95-r1
-          mkdir -p /app/hadolint
-          cd /app/hadolint
-          cabal update
-          cabal install --jobs  --enable-executable-stripping --enable-optimization=2 --enable-shared --enable-split-sections  --disable-debug-info  ShellCheck-0.6.0
-          upx -9 /root/.cabal/bin/shellcheck
-          apk --no-cache add libffi=3.2.1-r6 libgmpxx=6.1.2-r1 parallel=20180622-r0
-          # Main script
-          shellcheck --version
-          apk --no-cache add grep
-          find . -type f -print0 | \
-            xargs -0 sed -i 's:#!/usr/bin/with-contenv bash:#!/bin/bash:g'
-          for file in $(grep -IRl "#\!\(/usr/bin/env \|/bin/\)" --exclude-dir ".git" "${TARGET}"); do
-            if ! shellcheck $file; then
-              export FAILED=1
-            else
-              echo "$file OK"
-            fi
-          done
-          if [ "${FAILED}" = "1" ]; then
-            exit 1
-          fi
-        displayName: "Run shellcheck"
+  # - job: "shellcheck"
+  #   pool:
+  #     vmImage: "ubuntu-16.04"
+  #   container: ubuntu:18.04
+  #   steps:
+  #     - script: |
+  #         # Install
+  #         apk --no-cache add curl=7.64.0-r1 cabal=2.2.0.0-r0 ghc=8.4.3-r0 build-base=0.5-r1 upx=3.95-r1
+  #         mkdir -p /app/hadolint
+  #         cd /app/hadolint
+  #         cabal update
+  #         cabal install --jobs  --enable-executable-stripping --enable-optimization=2 --enable-shared --enable-split-sections  --disable-debug-info  ShellCheck-0.6.0
+  #         upx -9 /root/.cabal/bin/shellcheck
+  #         apk --no-cache add libffi=3.2.1-r6 libgmpxx=6.1.2-r1 parallel=20180622-r0
+  #         # Main script
+  #         shellcheck --version
+  #         apk --no-cache add grep
+  #         find . -type f -print0 | \
+  #           xargs -0 sed -i 's:#!/usr/bin/with-contenv bash:#!/bin/bash:g'
+  #         for file in $(grep -IRl "#\!\(/usr/bin/env \|/bin/\)" --exclude-dir ".git" "${TARGET}"); do
+  #           if ! shellcheck $file; then
+  #             export FAILED=1
+  #           else
+  #             echo "$file OK"
+  #           fi
+  #         done
+  #         if [ "${FAILED}" = "1" ]; then
+  #           exit 1
+  #         fi
+  #       displayName: "Run shellcheck"

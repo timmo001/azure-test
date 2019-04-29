@@ -11,49 +11,37 @@ trigger:
 pr:
   - master
 
-# variables:
-#   VERSION_HADOLINT: "latest"
-#   VERSION_SHELLCHECK: "latest"
+variables:
+  ENABLE_HADOLINT: "false"
+  ENABLE_SHELLCHECK: "false"
+  VERSION_HADOLINT: "latest"
+  VERSION_SHELLCHECK: "latest"
 
 jobs:
+  # hadolint
   - job: "hadolint"
     pool:
       vmImage: "ubuntu-16.04"
-    container: hadolint/hadolint:latest
     steps:
+      - script: sudo docker pull hadolint/hadolint:${VERSION_HADOLINT}
+        displayName: "Install Hadolint"
       - script: |
-          # Main script
-          hadolint --version
-          hadolint "${TARGET}/Dockerfile"
+          if [ ${ENABLE_HADOLINT} = "true" ]; then
+            sudo docker run --rm -i \
+              -v $(pwd)/.hadolint.yaml:/.hadolint.yaml:ro \
+              hadolint/hadolint:${VERSION_HADOLINT} < Dockerfile
+          fi
         displayName: "Run hadolint"
-
-  # - job: "shellcheck"
-  #   pool:
-  #     vmImage: "ubuntu-16.04"
-  #   container: ubuntu:18.04
-  #   steps:
-  #     - script: |
-  #         # Install
-  #         apk --no-cache add curl=7.64.0-r1 cabal=2.2.0.0-r0 ghc=8.4.3-r0 build-base=0.5-r1 upx=3.95-r1
-  #         mkdir -p /app/hadolint
-  #         cd /app/hadolint
-  #         cabal update
-  #         cabal install --jobs  --enable-executable-stripping --enable-optimization=2 --enable-shared --enable-split-sections  --disable-debug-info  ShellCheck-0.6.0
-  #         upx -9 /root/.cabal/bin/shellcheck
-  #         apk --no-cache add libffi=3.2.1-r6 libgmpxx=6.1.2-r1 parallel=20180622-r0
-  #         # Main script
-  #         shellcheck --version
-  #         apk --no-cache add grep
-  #         find . -type f -print0 | \
-  #           xargs -0 sed -i 's:#!/usr/bin/with-contenv bash:#!/bin/bash:g'
-  #         for file in $(grep -IRl "#\!\(/usr/bin/env \|/bin/\)" --exclude-dir ".git" "${TARGET}"); do
-  #           if ! shellcheck $file; then
-  #             export FAILED=1
-  #           else
-  #             echo "$file OK"
-  #           fi
-  #         done
-  #         if [ "${FAILED}" = "1" ]; then
-  #           exit 1
-  #         fi
-  #       displayName: "Run shellcheck"
+  # shellcheck
+  - job: "shellCheck"
+    pool:
+      vmImage: "ubuntu-16.04"
+    steps:
+      - script: sudo docker pull koalaman/shellcheck:${VERSION_SHELLCHECK}
+        displayName: "Install shellcheck"
+      - script: |
+          if [ ${ENABLE_SHELLCHECK} = "true" ]; then
+            sudo docker run --rm -i \
+              -v $(pwd):/mnt:ro koalaman/shellcheck:${VERSION_SHELLCHECK} *.sh
+          fi
+        displayName: "Run shellcheck"

@@ -30,6 +30,8 @@ jobs:
             sudo docker run --rm -i \
               -v $(pwd)/.hadolint.yaml:/.hadolint.yaml:ro \
               hadolint/hadolint:${VERSION_HADOLINT} < Dockerfile
+          else
+            echo "hadolint disabled. Skipping.."
           fi
         displayName: "Run hadolint"
   # shellcheck
@@ -43,5 +45,7 @@ jobs:
           if [ ${ENABLE_SHELLCHECK} = "true" ]; then
             sudo docker run --rm -i \
               -v $(pwd):/mnt:ro koalaman/shellcheck:${VERSION_SHELLCHECK} *.sh
+          else
+            echo "shellcheck disabled. Skipping.."
           fi
         displayName: "Run shellcheck"
